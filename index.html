@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>NY Times Article search</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <style>
+            .whiteFont {
+                color: white;
+            }
+
+            .textCenter {
+                text-align: center;
+            }
+
+            .bannerColor {
+                background-color: #21325a;
+            }
+
+            .logoStuff {
+                margin-right: 1rem;
+            }
+
+            .smallLogos {
+                margin-right: 0.4rem;
+            }
+        </style>
+        <script src="https://kit.fontawesome.com/39ea56fe5e.js" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 jumbotron bannerColor whiteFont textCenter">
+                    <h1><span><i class="far fa-newspaper logoStuff"></i></span>New York Times Search</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 bg-light p-2">
+                    <h4><span><i class="far fa-file smallLogos"></i></span>Search parameters</h4>
+                </div>
+                <div class="col-12 border pt-4">
+                    <h6>Search term:</h6>
+                    <input type="text" name="searchTerm" id="searchTerm" class="mb-2">
+                    <h6>Number of Records to Retrieve:</h6>
+                    <input type="number" name="numberOfRecords" id="numberOfRecords" class="mb-2">
+                    <h6>Start Year (Optional):</h6>
+                    <input type="number" name="startYear" id="startYear" class="mb-2">
+                    <h6>End Year (Optional):</h6>
+                    <input type=" number " name="endYear " id="endYear" class="mb-4 ">
+                    <br>
+                    <button class="btn btn-light mb-2" type="submit " id="searchBtn"><span><i
+                                class="fas fa-search smallLogos"></i></span>Search</button>
+
+                    <button class="btn btn-light mb-2" type="submit " id="clearBtn"><span><i
+                                class="fas fa-trash smallLogos"></i></span>Clear</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 bg-light p-2 mt-4">
+                    <h4><span><i class="fas fa-archive smallLogos"></i></span>Top Articles</h4>
+                </div>
+                <div class="col-12 border pt-4">
+                    <!-- row 1 -->
+
+                    <div class="container articles-out">
+
+                    </div>
+
+                    <!-- end row-->
+
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+            <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+                integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+            <script>
+                //Selecting elements
+                var searchTermEl = document.querySelector("#searchTerm");
+                var numberOfRecordsEl = document.querySelector("#numberOfRecords");
+                var startYearEl = document.querySelector("#startYear ");
+                var endYearEl = document.querySelector("#endYear");
+                var searchBtn = document.querySelector("#searchBtn");
+                var clearBtn = document.querySelector("#clearBtn");
+                var articlesEl = document.querySelector(".articles-out");
+
+
+
+
+                //$("body").html("<h1>this is the cool group</h1>");
+
+                //onclick function
+                searchBtn.addEventListener("click", function (event) {
+                    var searchTerm = searchTermEl.value;
+                    console.log(searchTerm);
+
+                    var queryURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${searchTerm}&api-key=sWCHiniY3j2YSyoYA2Ddbdln55bhl190`;
+
+                    $.ajax({
+                        url: queryURL,
+                        method: "GET"
+                    })
+                        .then(function (response) {
+                            console.log(response.response.docs);
+                            var articles = response.response.docs;
+                            console.log(articles);
+
+
+                            for (var i = 0; i <= articles.length; i++) {
+                                var article = articles[i];
+
+                                var outputHTML = `
+                                <div class="container border">
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div style="max-width: 150px;"><img scr=""></div>
+                                    <div><h1 id="articleTitle">${article.headline.main}</h1></div>
+                                    <div><p>${article.abstract}</p></div>
+                                    <div><a href="${article.web_url}">Click here to view full article</a></div>
+                                </div>
+                            </div>
+                            </div>
+                            `
+
+                                articlesEl.innerHTML += outputHTML;
+                            }
+
+                            //console.log(article);
+
+                            //  YOU CAN USE THE + FOR THIS 
+                            // Template literals are better =P
+
+                            //This will give us a much nicer result guys!
+
+                            // <div class="container">
+                            //     <div class="row">
+                            //         <div class="col-sm">
+                            //             <ul class="list-unstyled">
+                            //                 <li class="media">
+                            //                     <img src="..." class="mr-3" alt="...">
+                            //                     <div class="media-body">
+                            //                         <h5 class="mt-0 mb-1">List-based media object</h5>
+                            //                         Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras
+                            //                         purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi
+                            //                         vulputate fringilla. Donec lacinia congue felis in faucibus.
+                            //                     </div>
+                            //                 </li>
+                            //             </ul>
+
+                            //         </div>
+                            //     </div>
+
+                            //     <div class="row">
+                            //         <div class="col-sm">
+                            //             <ul class="list-unstyled">
+                            //                 <li class="media">
+                            //                     <img src="..." class="mr-3" alt="...">
+                            //                     <div class="media-body">
+                            //                         <h5 class="mt-0 mb-1">List-based media object</h5>
+                            //                         Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras
+                            //                         purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi
+                            //                         vulputate fringilla. Donec lacinia congue felis in faucibus.
+                            //                     </div>
+                            //                 </li>
+                            //             </ul>
+
+                            //         </div>
+                            //     </div>
+
+                            //     <div class="row">
+                            //         <div class="col-sm">
+                            //             <ul class="list-unstyled">
+                            //                 <li class="media">
+                            //                     <img src="..." class="mr-3" alt="...">
+                            //                     <div class="media-body">
+                            //                         <h5 class="mt-0 mb-1">List-based media object</h5>
+                            //                         Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras
+                            //                         purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi
+                            //                         vulputate fringilla. Donec lacinia congue felis in faucibus.
+                            //                     </div>
+                            //                 </li>
+                            //             </ul>
+
+                            //         </div>
+                            //     </div>
+
+                            // </div>
+
+
+
+                        });
+
+
+
+                });
+
+
+            //on click clear fn
+            </script>
+    </body>
+
+</html>
+
+<!-- 
+    
+    # New York Times Article Search - Phase 01
+
+## Front-End Team
+![nyt-search](Images/nyt.png)
+
+* Create the layout for the design above. Feel free to use Bootstrap or to do something more customized of your own.
+
+* Make sure to organize your code so as to have the necessary IDs.
+
+* Incorporate text boxes for capturing User Input. Then research how to retrieve the input values in JavaScript
+
+## Back-End Team
+
+* Do preliminary research on the [API](http://developer.nytimes.com/article_search_v2.json).
+
+* Register for an API Key.
+
+* Understand what format the URL should look like to make an Article Call. (Hint: Use the API Console!!)
+
+* Experiment with console logging various fields.
+
+
+
+# New York Times Article Search - Phase 02
+
+## Front-End Team
+
+* Begin creating basic click events. Register the submit button
+
+* Create working transfers of data between the text-boxes and the backend.
+
+* Experiment with creating content regions for where the article will go.
+
+## Back-End Team
+
+* Create the AJAX call needed to retrieve data then console.log all of the relevant fields.
+
+* Incorporate various “optional parameters” (hard code these in initially).
+
+* Take note of various “bugs” that appear with certain searches.
+
+## All-Together
+
+* Display the HTML content!!
+
+# New York Times Article Search - Phase 03
+
+## Front-End Team
+
+* Continue polishing the display of content in the HTML.
+
+* Consider adding styling or other jQuery tricks.
+
+* Consider using Bootswatch and/or Font Awesome to add more visual appeal
+
+## Back-End Team
+
+* Put in a hard-effort to deal with bugs. How can you handle missing fields?
+
+# New York Times Article Search - Phase 04
+
+## All-Together
+
+* Deploy your app to GitHub Pages!
+
+* Then slack your links to your instructors + TAs
+en slack your links to your instructors + TAs
+-->
