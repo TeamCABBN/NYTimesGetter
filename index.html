@@ -100,26 +100,37 @@
 
                 //$("body").html("<h1>this is the cool group</h1>");
 
-                //onclick function
+                //Search onclick function
                 searchBtn.addEventListener("click", function (event) {
+                    
+                    //Get what was typed into search box
                     var searchTerm = searchTermEl.value;
+
                     console.log(searchTerm);
 
+                    //Insert search parameter into query url
                     var queryURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${searchTerm}&api-key=sWCHiniY3j2YSyoYA2Ddbdln55bhl190`;
 
+                    //execute ajax request
                     $.ajax({
                         url: queryURL,
                         method: "GET"
                     })
                         .then(function (response) {
+                            //log response
                             console.log(response.response.docs);
+                            
+                            //Extract array with all articles stored
                             var articles = response.response.docs;
                             console.log(articles);
 
-
+                            //itirate through all articles
                             for (var i = 0; i <= articles.length; i++) {
+
+                                //Restucture variable to article
                                 var article = articles[i];
 
+                                //Fill information about article into a html string
                                 var outputHTML = `
                                 <div class="container border">
                             <div class="row">
@@ -133,6 +144,7 @@
                             </div>
                             `
 
+                                //Append HTML to bottom of page
                                 articlesEl.innerHTML += outputHTML;
                             }
 
